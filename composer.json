@@ -1,5 +1,5 @@
 {
-    "name": "kairosagency/acl-manager-bundle",
+    "name": "kairos/acl-manager-bundle",
     "type": "symfony-bundle",
     "description": "ACL Manager for Symfony2",
     "keywords": ["ACL management"],
