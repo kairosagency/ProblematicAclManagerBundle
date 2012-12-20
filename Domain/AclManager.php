@@ -54,6 +54,34 @@ class AclManager extends AbstractAclManager
     }
 
     /**
+     * Get the permission of the user for an object
+     *
+     * @param $domainObject
+     * @param UserInterface $securityIdentity
+     * @return bool|string
+     */
+    public function getPermission($domainObject, $securityIdentity = null, $type = 'object')
+    {
+        $permission = false;
+
+        if(is_null($securityIdentity)){
+            $securityIdentity = $this->getUser();
+        }
+
+        $acl = $this->getAclProvider()->findAcl(ObjectIdentity::fromDomainObject($domainObject));
+
+        if(count($acl->getObjectAces()) > 0) {
+            foreach($acl->getObjectAces() as $acle) {
+                if($acle->getSecurityIdentity()->getUsername() == $securityIdentity->getUsername()) {
+                    $permission = $this->getMaskName($acle->getMask());
+                }
+            }
+        }
+        return $permission;
+    }
+
+
+    /**
      * @param mixed $domainObject
      * @param int   $mask
      * @param UserInterface | TokenInterface | RoleInterface $securityIdentity
@@ -165,6 +193,31 @@ class AclManager extends AbstractAclManager
         $user = $token->getUser();
 
         return (is_object($user)) ? $user : 'IS_AUTHENTICATED_ANONYMOUSLY';
+    }
+
+    /**
+     * Get a readable name for a mask
+     *
+     * @param $maskId
+     * @return string
+     */
+    private function getMaskName($maskId)
+    {
+        $maskName = '';
+        switch($maskId) {
+            case MaskBuilder::MASK_OWNER:
+                $maskName = 'Owner';
+                break;
+
+            case MaskBuilder::MASK_EDIT:
+                $maskName = 'Editor';
+                break;
+
+            case MaskBuilder::MASK_VIEW:
+                $maskName = 'Viewer';
+                break;
+        }
+        return $maskName;
     }
     
 }
