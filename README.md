@@ -54,6 +54,7 @@ $aclManager = $this->get('problematic.acl_manager');
 $aclManager->addObjectPermission($comment, MaskBuilder::MASK_OWNER, $userEntity);
 // Or:
 $aclManager->addObjectPermission($comment, MaskBuilder::MASK_OWNER);
+"
 // Replaces all current permissions with this new one
 $aclManager->setObjectPermission($comment, MaskBuilder::MASK_OWNER, $userEntity);
 $aclManager->revokePermission($comment, MaskBUILDER::MASK_DELETE, $userEntity);
@@ -61,7 +62,9 @@ $aclManager->revokeAllObjectPermissions($comment, $userEntity);
 
 // Same with class permissions:
 $aclManager->addClassPermission($comment, MaskBuilder::MASK_OWNER, $userEntity);
+
 $aclManager->setClassPermission($comment, MaskBuilder::MASK_OWNER, $userEntity);
+
 $aclManager->revokeClassPermission($comment, MaskBUILDER::MASK_DELETE, $userEntity);
 $aclManager->revokeAllClassPermissions($comment, $userEntity);
 
