@@ -62,8 +62,6 @@ class AclManager extends AbstractAclManager
      */
     public function getPermission($domainObject, $securityIdentity = null, $type = 'object')
     {
-        $permission = false;
-
         if(is_null($securityIdentity)){
             $securityIdentity = $this->getUser();
         }
@@ -73,11 +71,11 @@ class AclManager extends AbstractAclManager
         if(count($acl->getObjectAces()) > 0) {
             foreach($acl->getObjectAces() as $acle) {
                 if($acle->getSecurityIdentity()->getUsername() == $securityIdentity->getUsername()) {
-                    $permission = $this->getMaskName($acle->getMask());
+                    return $acle->getMask();
                 }
             }
         }
-        return $permission;
+        return false;
     }
 
 
@@ -201,7 +199,7 @@ class AclManager extends AbstractAclManager
      * @param $maskId
      * @return string
      */
-    private function getMaskName($maskId)
+    public function getMaskName($maskId)
     {
         $maskName = '';
         switch($maskId) {
