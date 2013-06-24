@@ -62,19 +62,25 @@ class AclManager extends AbstractAclManager
      */
     public function getPermission($domainObject, $securityIdentity = null, $type = 'object')
     {
-        if(is_null($securityIdentity)){
-            $securityIdentity = $this->getUser();
-        }
+        try{
+            if(is_null($securityIdentity)){
+                $securityIdentity = $this->getUser();
+            }
 
-        $acl = $this->getAclProvider()->findAcl(ObjectIdentity::fromDomainObject($domainObject));
+            $acl = $this->getAclProvider()->findAcl(ObjectIdentity::fromDomainObject($domainObject));
 
-        if(count($acl->getObjectAces()) > 0) {
-            foreach($acl->getObjectAces() as $acle) {
-                if($acle->getSecurityIdentity()->getUsername() == $securityIdentity->getUsername()) {
-                    return $acle->getMask();
+            if(count($acl->getObjectAces()) > 0) {
+                foreach($acl->getObjectAces() as $acle) {
+                    if($acle->getSecurityIdentity()->getUsername() == $securityIdentity->getUsername()) {
+                        return $acle->getMask();
+                    }
                 }
             }
         }
+        catch(\Exception $e) {
+            return false;
+        }
+
         return false;
     }
 
